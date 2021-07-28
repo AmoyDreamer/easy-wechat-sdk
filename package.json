@@ -1,0 +1,26 @@
+{
+  "name": "easy-wechat-sdk",
+  "version": "1.0.0",
+  "description": "A simple library based on the WeChat API that supports getting permission signatures on Node.js.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AmoyDreamer/easy-wechat-sdk.git"
+  },
+  "keywords": [
+    "wechat"
+  ],
+  "author": "Allen Liu",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/AmoyDreamer/easy-wechat-sdk/issues"
+  },
+  "homepage": "https://github.com/AmoyDreamer/easy-wechat-sdk#readme",
+  "dependencies": {
+    "flexible-axios": "^1.0.1",
+    "secure-cache": "^1.0.1"
+  }
+}

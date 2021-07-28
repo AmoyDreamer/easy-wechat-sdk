@@ -8,8 +8,8 @@ const cache = require('secure-cache')
 const request = require('flexible-axios')
 const _api = 'https://api.weixin.qq.com/cgi-bin/'//WeChat API
 
-class weChatJSSDK {
-    //初始化微信相关账号信息
+class WeChatJSSDK {
+    //Initialize WeChat-related account information
     constructor(appId, appSecret) {
         this._appId = appId
         this._appSecret = appSecret
@@ -21,7 +21,7 @@ class weChatJSSDK {
         const scheme = ctx.request.headers['x-forwarded-proto'] ? ctx.request.headers['x-forwarded-proto'] : 'http'
         const url = scheme + '://' + ctx.host + ctx.url
 
-        //这里参数的顺序要按照 key 值 ASCII 码升序排序
+        //Here the order of the parameters should be sorted in ascending order of the key value ASCII code
         let str = 'jsapi_ticket=' + jsapiTicket
             + '&noncestr=' + nonceStr
             + '&timestamp=' + timeStamp
@@ -37,10 +37,10 @@ class weChatJSSDK {
         }
         return data
     }
-    //获取JS-SDK权限通行证
+    //Get a JS-SDK permission ticket
     async getJsapiTicket() {
         let jsapiTicket = cache.get('jsapiTicket')
-        //jssdk通行证过期
+        //JS-SDK pass permission ticket expired
         if (!jsapiTicket) {
             let accessToken = await this.getAccessToken()
             const url = _api + 'ticket/getticket?'
@@ -49,16 +49,16 @@ class weChatJSSDK {
             const data = await request.get(url)
             if (data && data.errcode == 0) {
                 jsapiTicket = data.ticket
-                //写入缓存，2小时刷新
+                //Write to cache, 2 hours refresh
                 cache.set('jsapiTicket', jsapiTicket, 1000 * 7200)
             }
         }
         return jsapiTicket
     }
-    //获取许可口令
+    //Get Access Token
     async getAccessToken() {
         let accessToken = cache.get('accessToken')
-        //token过期
+        //token expired
         if (!accessToken) {
             const url = _api + 'token?grant_type=client_credential'
                 + '&appid=' + this._appId
@@ -66,13 +66,13 @@ class weChatJSSDK {
             const data = await request.get(url)
             if (data) {
                 accessToken = data.access_token
-                //写入缓存，2小时刷新
+                //Write to cache, 2 hours refresh
                 cache.set('accessToken', accessToken, 1000 * 7200)
             }
         }
         return accessToken
     }
-    //获取随机字符串
+    //Get random string
     createNonceStr(length = 16) {
         let chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
         let str = '', index
@@ -83,4 +83,4 @@ class weChatJSSDK {
         return str;
     }
 }
-module.exports = weChatJSSDK
+module.exports = WeChatJSSDK

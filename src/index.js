@@ -14,11 +14,14 @@ class WeChatJSSDK {
         this._appId = appId
         this._appSecret = appSecret
     }
+    /**
+     * @method Get sign packages
+     * @param {String} url => The url of current page.(required)
+     */
     async getSignPackage(url) {
         const jsapiTicket = await this.getJsapiTicket()
         const nonceStr = this.createNonceStr()
         const timeStamp = Math.floor((new Date()).getTime() / 1000)
-
         //Here the order of the parameters should be sorted in ascending order of the key value ASCII code
         let str = 'jsapi_ticket=' + jsapiTicket
             + '&noncestr=' + nonceStr
@@ -35,45 +38,61 @@ class WeChatJSSDK {
         }
         return data
     }
-    //Get a JS-SDK permission ticket
+    /**
+     * @method Get a JS-SDK permission ticket
+     * @document https://developers.weixin.qq.com/doc/offiaccount/OA_Web_Apps/JS-SDK.html#62
+     */
     async getJsapiTicket() {
         let jsapiTicket = cache.get('jsapiTicket')
-        console.log(jsapiTicket)
         //JS-SDK pass permission ticket expired
         if (!jsapiTicket) {
             let accessToken = await this.getAccessToken()
-            const url = _api + 'ticket/getticket?'
-                + 'access_token=' + accessToken
-                + '&type=jsapi'
-            const data = await request.get(url)
-            console.log('jsapiTicket', data)
-            if (data && data.errcode == 0) {
-                jsapiTicket = data.ticket
-                //Write to cache, 2 hours refresh
-                cache.set('jsapiTicket', jsapiTicket, 1000 * 7200)
+            try {
+                const url = _api + 'ticket/getticket?'
+                    + 'access_token=' + accessToken
+                    + '&type=jsapi'
+                const data = await request.get(url)
+                console.log(`Get "jsapi_ticket" by request url => "${url}"`, data)
+                if (data && data.errcode == 0) {
+                    jsapiTicket = data.ticket
+                    //Write to cache, 2 hours refresh
+                    cache.set('jsapiTicket', jsapiTicket, 1000 * 7200)
+                }
+            } catch(e) {
+                throw new Error('easy-wechat-sdk: network error, please try again later.')
             }
         }
         return jsapiTicket
     }
-    //Get Access Token
+    /**
+     * @method Get Access Token
+     * @document https://developers.weixin.qq.com/doc/offiaccount/Basic_Information/Get_access_token.html
+     */
     async getAccessToken() {
         let accessToken = cache.get('accessToken')
         //token expired
         if (!accessToken) {
-            const url = _api + 'token?grant_type=client_credential'
-                + '&appid=' + this._appId
-                + '&secret=' + this._appSecret
-            const data = await request.get(url)
-            console.log('accessToken', data)
-            if (data && data.access_token) {
-                accessToken = data.access_token
-                //Write to cache, 2 hours refresh
-                cache.set('accessToken', accessToken, 1000 * 7200)
+            try {
+                const url = _api + 'token?grant_type=client_credential'
+                    + '&appid=' + this._appId
+                    + '&secret=' + this._appSecret
+                const data = await request.get(url)
+                console.log(`Get "access_token" by request url => "${url}"`, data)
+                if (data && data.access_token) {
+                    accessToken = data.access_token
+                    //Write to cache, 2 hours refresh
+                    cache.set('accessToken', accessToken, 1000 * 7200)
+                }
+            } catch(e) {
+                throw new Error('easy-wechat-sdk: network error, please try again later.')
             }
         }
         return accessToken
     }
-    //Get random string
+    /**
+     * @method Get random string
+     * @param {Number} length => The length of random string, default is 16.(optional)
+     */
     createNonceStr(length = 16) {
         let chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
         let str = '', index

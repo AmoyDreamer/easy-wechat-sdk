@@ -14,12 +14,10 @@ class WeChatJSSDK {
         this._appId = appId
         this._appSecret = appSecret
     }
-    async getSignPackage(ctx) {
+    async getSignPackage(url) {
         const jsapiTicket = await this.getJsapiTicket()
         const nonceStr = this.createNonceStr()
         const timeStamp = Math.floor((new Date()).getTime() / 1000)
-        const scheme = ctx.request.headers['x-forwarded-proto'] ? ctx.request.headers['x-forwarded-proto'] : 'http'
-        const url = scheme + '://' + ctx.host + ctx.url
 
         //Here the order of the parameters should be sorted in ascending order of the key value ASCII code
         let str = 'jsapi_ticket=' + jsapiTicket
@@ -40,6 +38,7 @@ class WeChatJSSDK {
     //Get a JS-SDK permission ticket
     async getJsapiTicket() {
         let jsapiTicket = cache.get('jsapiTicket')
+        console.log(jsapiTicket)
         //JS-SDK pass permission ticket expired
         if (!jsapiTicket) {
             let accessToken = await this.getAccessToken()
@@ -47,6 +46,7 @@ class WeChatJSSDK {
                 + 'access_token=' + accessToken
                 + '&type=jsapi'
             const data = await request.get(url)
+            console.log('jsapiTicket', data)
             if (data && data.errcode == 0) {
                 jsapiTicket = data.ticket
                 //Write to cache, 2 hours refresh
@@ -64,6 +64,7 @@ class WeChatJSSDK {
                 + '&appid=' + this._appId
                 + '&secret=' + this._appSecret
             const data = await request.get(url)
+            console.log('accessToken', data)
             if (data) {
                 accessToken = data.access_token
                 //Write to cache, 2 hours refresh

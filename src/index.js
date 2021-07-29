@@ -65,7 +65,7 @@ class WeChatJSSDK {
                 + '&secret=' + this._appSecret
             const data = await request.get(url)
             console.log('accessToken', data)
-            if (data) {
+            if (data && data.access_token) {
                 accessToken = data.access_token
                 //Write to cache, 2 hours refresh
                 cache.set('accessToken', accessToken, 1000 * 7200)

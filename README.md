@@ -43,4 +43,4 @@ The following interfaces are used under the module **easy-wechat-sdk**
 - [Get JS-SDK permission ticket](https://developers.weixin.qq.com/doc/offiaccount/OA_Web_Apps/JS-SDK.html#62)
 
 ## License
-google-recaptcha-api is [MIT licensed](https://github.com/AmoyDreamer/easy-wechat-sdk/blob/master/LICENSE).
+easy-wechat-sdk is [MIT licensed](https://github.com/AmoyDreamer/easy-wechat-sdk/blob/master/LICENSE).

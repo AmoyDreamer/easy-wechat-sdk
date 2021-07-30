@@ -47,7 +47,7 @@ class WeChatJSSDK {
             try {
                 const url = `${API}ticket/getticket?type=jsapi&access_token=${accessToken}`
                 const data = await request.get(url)
-                console.log(`Get "jsapi_ticket" by request url => "${url}"`, data)
+                console.log(`easy-wechat-sdk: get "jsapi_ticket" by request url => "${url}", response data is => `, data)
                 if (data && data.errcode == 0) {
                     jsapiTicket = data.ticket
                     //Write to cache, 2 hours refresh
@@ -70,7 +70,7 @@ class WeChatJSSDK {
             try {
                 const url = `${API}token?grant_type=client_credential&appid=${this._appId}&secret=${this._appSecret}`
                 const data = await request.get(url)
-                console.log(`Get "access_token" by request url => "${url}"`, data)
+                console.log(`easy-wechat-sdk: get "access_token" by request url => "${url}", response data is => `, data)
                 if (data && data.access_token) {
                     accessToken = data.access_token
                     //Write to cache, 2 hours refresh

@@ -6,7 +6,7 @@
 const crypto = require('crypto')
 const cache = require('secure-cache')
 const request = require('flexible-axios')
-const _api = 'https://api.weixin.qq.com/cgi-bin/'//WeChat API
+const API = 'https://api.weixin.qq.com/cgi-bin/'//WeChat API
 
 class WeChatJSSDK {
     //Initialize WeChat-related account information
@@ -23,10 +23,7 @@ class WeChatJSSDK {
         const nonceStr = this.createNonceStr()
         const timeStamp = Math.floor((new Date()).getTime() / 1000)
         //Here the order of the parameters should be sorted in ascending order of the key value ASCII code
-        let str = 'jsapi_ticket=' + jsapiTicket
-            + '&noncestr=' + nonceStr
-            + '&timestamp=' + timeStamp
-            + '&url=' + url
+        const str = `jsapi_ticket=${jsapiTicket}&noncestr=${nonceStr}&timestamp=${timeStamp}&url=${url}`
         const signature = crypto.createHash('sha1').update(str).digest('hex')
         let data = {
             appId: this._appId,
@@ -48,9 +45,7 @@ class WeChatJSSDK {
         if (!jsapiTicket) {
             let accessToken = await this.getAccessToken()
             try {
-                const url = _api + 'ticket/getticket?'
-                    + 'access_token=' + accessToken
-                    + '&type=jsapi'
+                const url = `${API}ticket/getticket?type=jsapi&access_token=${accessToken}`
                 const data = await request.get(url)
                 console.log(`Get "jsapi_ticket" by request url => "${url}"`, data)
                 if (data && data.errcode == 0) {
@@ -70,12 +65,10 @@ class WeChatJSSDK {
      */
     async getAccessToken() {
         let accessToken = cache.get('accessToken')
-        //token expired
+        //Access token expired
         if (!accessToken) {
             try {
-                const url = _api + 'token?grant_type=client_credential'
-                    + '&appid=' + this._appId
-                    + '&secret=' + this._appSecret
+                const url = `${API}token?grant_type=client_credential&appid=${this._appId}&secret=${this._appSecret}`
                 const data = await request.get(url)
                 console.log(`Get "access_token" by request url => "${url}"`, data)
                 if (data && data.access_token) {

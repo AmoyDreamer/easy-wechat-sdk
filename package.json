@@ -11,7 +11,14 @@
     "url": "git+https://github.com/AmoyDreamer/easy-wechat-sdk.git"
   },
   "keywords": [
-    "wechat"
+    "wechat",
+    "sdk",
+    "api",
+    "jssdk",
+    "jsapi",
+    "signature",
+    "ticket",
+    "access token"
   ],
   "author": "Allen Liu",
   "license": "MIT",

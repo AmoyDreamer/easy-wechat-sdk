@@ -1,6 +1,6 @@
 {
   "name": "easy-wechat-sdk",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A simple library based on the WeChat API that supports getting permission signatures on Node.js.",
   "main": "index.js",
   "scripts": {
